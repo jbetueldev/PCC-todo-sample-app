@@ -1,0 +1,5 @@
+FROM mysql:lts
+
+WORKDIR /home/mysql/app
+
+COPY ./init.sql /docker-entrypoint-initdb.d/
