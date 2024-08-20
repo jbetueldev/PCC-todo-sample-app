@@ -1,4 +1,4 @@
-## The NodeJS Todo Sample Application
+## The NodeJS Todo Sample Application - BULBASAUR
 
 The app is a simple CRUD (Create, read, update, delete) Todo application made with NodeJS.
 
