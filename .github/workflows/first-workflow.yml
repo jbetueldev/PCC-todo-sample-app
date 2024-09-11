@@ -26,6 +26,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
             cd /home/ec2-user/PCC-todo-sample-app
+            sudo docker-compose down
             sudo docker buildx build -t nginx-todo:latest -f Dockerfile-Nginx .
             sudo docker buildx build -t mysql-todo:latest -f Dockerfile-Mysql .
             sudo docker buildx build -t nodejs-todo:latest -f Dockerfile-Node .
