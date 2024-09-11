@@ -14,3 +14,21 @@ jobs:
     
     - name: Read index.html
       run: cat index.html
+    
+    - name: Connect to EC2
+      env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          HOSTNAME: ${{secrets.SSH_HOST}}
+          USER_NAME: ${{secrets.USER_NAME}}
+
+      run: |
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+
+            cd /home/ec2-user/PCC-todo-sample-app
+            sudo docker buildx build -t nginx-todo:latest -f Dockerfile-Nginx .
+            sudo docker buildx build -t mysql-todo:latest -f Dockerfile-Mysql .
+            sudo docker buildx build -t nodejs-todo:latest -f Dockerfile-Node .
+            sudo docker-compose up -d
+
+            '
