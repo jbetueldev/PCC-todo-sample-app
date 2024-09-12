@@ -22,14 +22,17 @@ jobs:
           USER_NAME: ${{secrets.USER_NAME}}
 
       run: |
-        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
 
             cd /home/ec2-user/PCC-todo-sample-app
             sudo docker-compose down
             cd /home/ec2-user
-            rm -rf /home/ec2-user/PCC-todo-sample-app
-            git clone git@github.com:jbetueldev/PCC-todo-sample-app.git
+            if [ ! -d "/home/ec2-user/PCC-todo-sample-app" ]; then
+                git clone git@github.com:jbetueldev/PCC-todo-sample-app.git
+            else
+                git pull origin main
+            fi
             cd /home/ec2-user/PCC-todo-sample-app
             sudo docker buildx build -t nginx-todo:latest -f Dockerfile-Nginx .
             sudo docker buildx build -t mysql-todo:latest -f Dockerfile-Mysql .
